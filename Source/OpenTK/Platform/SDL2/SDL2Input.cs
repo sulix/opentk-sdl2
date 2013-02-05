@@ -75,6 +75,64 @@ namespace OpenTK.Platform.SDL2
 
         #endregion
 
+
+		#region internal void ProcessEvent(ref API.Event e)
+
+        internal void ProcessEvent(ref API.Event e)
+        {
+            switch (e.type)
+            {
+                case API.EventType.KeyDown:
+                case API.EventType.KeyUp:
+					//TODO: Make this work
+                    bool pressed = e.type == API.EventType.KeyDown;
+
+					break;
+
+                case API.EventType.MouseButtonDown:
+                    if      (e.button.button == 1) mouse[OpenTK.Input.MouseButton.Left] = true;
+                    else if (e.button.button == 2) mouse[OpenTK.Input.MouseButton.Middle] = true;
+                    else if (e.button.button == 3) mouse[OpenTK.Input.MouseButton.Right] = true;
+                    else if (e.button.button == 4) mouse[OpenTK.Input.MouseButton.Button1] = true;
+                    else if (e.button.button == 5) mouse[OpenTK.Input.MouseButton.Button2] = true;
+                    else if (e.button.button == 6) mouse[OpenTK.Input.MouseButton.Button3] = true;
+                    else if (e.button.button == 7) mouse[OpenTK.Input.MouseButton.Button4] = true;
+                    else if (e.button.button == 8) mouse[OpenTK.Input.MouseButton.Button5] = true;
+                    else if (e.button.button == 9) mouse[OpenTK.Input.MouseButton.Button6] = true;
+                    else if (e.button.button == 10) mouse[OpenTK.Input.MouseButton.Button7] = true;
+                    else if (e.button.button == 11) mouse[OpenTK.Input.MouseButton.Button8] = true;
+                    else if (e.button.button == 12) mouse[OpenTK.Input.MouseButton.Button9] = true;
+                    
+                    break;
+
+                case API.EventType.MouseButtonUp:
+                    if      (e.button.button == 1) mouse[OpenTK.Input.MouseButton.Left] = false;
+                    else if (e.button.button == 2) mouse[OpenTK.Input.MouseButton.Middle] = false;
+                    else if (e.button.button == 3) mouse[OpenTK.Input.MouseButton.Right] = false;
+                    else if (e.button.button == 4) mouse[OpenTK.Input.MouseButton.Button1] = false;
+                    else if (e.button.button == 5) mouse[OpenTK.Input.MouseButton.Button2] = false;
+                    else if (e.button.button == 6) mouse[OpenTK.Input.MouseButton.Button3] = false;
+                    else if (e.button.button == 7) mouse[OpenTK.Input.MouseButton.Button4] = false;
+                    else if (e.button.button == 8) mouse[OpenTK.Input.MouseButton.Button5] = false;
+                    else if (e.button.button == 9) mouse[OpenTK.Input.MouseButton.Button6] = false;
+                    else if (e.button.button == 10) mouse[OpenTK.Input.MouseButton.Button7] = false;
+                    else if (e.button.button == 11) mouse[OpenTK.Input.MouseButton.Button8] = false;
+                    else if (e.button.button == 12) mouse[OpenTK.Input.MouseButton.Button9] = false;
+                    break;
+
+                case API.EventType.MouseMotion:
+                    mouse.Position = new Point(e.motion.x, e.motion.y);
+                    break;
+
+				case API.EventType.MouseWheel:
+					mouse.Wheel += e.wheel.y;
+					break;
+
+            }
+        }
+
+        #endregion
+
         #region public void Poll()
 
         /// <summary>

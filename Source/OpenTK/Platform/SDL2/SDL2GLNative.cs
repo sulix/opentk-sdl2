@@ -164,12 +164,21 @@ namespace OpenTK.Platform.SDL2
 			while (finished == 0) {
 				lock (API.sdl_api_lock)
 				{
-					finished = API.PollEvent(out currentEvent);
+					finished = 1 - API.PollEvent(out currentEvent);
 				}
 				if (finished != 0) break;
 				switch (currentEvent.type) {
 				case API.EventType.Quit:
 					Closed (this, EventArgs.Empty);
+					break;
+				case API.EventType.MouseButtonDown:
+				case API.EventType.MouseButtonUp:
+				case API.EventType.MouseMotion:
+				case API.EventType.MouseWheel:
+					inputDriver.ProcessEvent(ref currentEvent);
+					if (SDL2Mouse.newestMouse != null) {
+						SDL2Mouse.newestMouse.ProcessEvent(ref currentEvent);
+					}
 					break;
 				}
 			}
@@ -193,8 +202,10 @@ namespace OpenTK.Platform.SDL2
             {
 				lock (API.sdl_api_lock)
 				{
+					Console.WriteLine(String.Format ("Bounds update ({0},{1})",value.Width, value.Height));
 					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 				}
+				Resize(this,EventArgs.Empty);
             }
         }
 
@@ -226,8 +237,12 @@ namespace OpenTK.Platform.SDL2
             set
             {
 				lock (API.sdl_api_lock) {
+					Console.WriteLine(String.Format ("Size update ({0},{1})",value.Width, value.Height));
 					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 				}
+
+				// Do we actually need to do this?
+				Resize(this,EventArgs.Empty);
             }
         }
 

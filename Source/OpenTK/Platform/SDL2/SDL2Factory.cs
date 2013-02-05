@@ -85,7 +85,7 @@ namespace OpenTK.Platform.SDL2
 
         public virtual OpenTK.Input.IMouseDriver2 CreateMouseDriver()
         {
-			return null;
+			return new SDL2Mouse();
         }
 
         #endregion

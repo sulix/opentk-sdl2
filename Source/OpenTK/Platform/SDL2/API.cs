@@ -375,132 +375,132 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct WindowEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			Byte eventid;
-			Byte padding1;
-			Byte padding2;
-			Byte padding3;
-			int data1;
-			int data2;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			public Byte eventid;
+			public Byte padding1;
+			public Byte padding2;
+			public Byte padding3;
+			public int data1;
+			public int data2;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct KeyboardEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			Byte state;
-			Byte repeat;
-			Byte padding2;
-			Byte padding3;
-			int keysym; // TODO: Write Keysym
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			public Byte state;
+			public Byte repeat;
+			public Byte padding2;
+			public Byte padding3;
+			public int keysym; // TODO: Write Keysym
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct TextInputEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			//char text[32]; //TODO: Work out how fixed sized arrays actually work in C#
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			//public char text[32]; //TODO: Work out how fixed sized arrays actually work in C#
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct MouseMotionEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			Byte state;
-			Byte padding1;
-			Byte padding2;
-			Byte padding3;
-			int x;
-			int y;
-			int xrel;
-			int yrel;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			public Byte state;
+			public Byte padding1;
+			public Byte padding2;
+			public Byte padding3;
+			public int x;
+			public int y;
+			public int xrel;
+			public int yrel;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct MouseButtonEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			Byte button;
-			Byte state;
-			Byte padding1;
-			Byte padding2;
-			int x;
-			int y;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			public Byte button;
+			public Byte state;
+			public Byte padding1;
+			public Byte padding2;
+			public int x;
+			public int y;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct MouseWheelEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			int x;
-			int y;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			public int x;
+			public int y;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyAxisEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			Byte which;
-			Byte axis;
-			Byte padding1;
-			Byte padding2;
-			int value;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public Byte which;
+			public Byte axis;
+			public Byte padding1;
+			public Byte padding2;
+			public int value;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyBallEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			Byte which;
-			Byte ball;
-			Byte padding1;
-			Byte padding2;
-			int xrel;
-			int yrel;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public Byte which;
+			public Byte ball;
+			public Byte padding1;
+			public Byte padding2;
+			public int xrel;
+			public int yrel;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyHatEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			Byte which;
-			Byte hat;
-			Byte value;
-			Byte padding1;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public Byte which;
+			public Byte hat;
+			public Byte value;
+			public Byte padding1;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyButtonEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			Byte which;
-			Byte button;
-			Byte state;
-			Byte padding1;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public Byte which;
+			public Byte button;
+			public Byte state;
+			public Byte padding1;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyDeviceEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 which;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 which;
 		}
 
 		//TODO: Controller events, Touch events, Gesture events, Drop Event
@@ -508,28 +508,28 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct DropEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			string file;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public string file;
 		}
 		*/
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct QuitEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
+			public UInt32 type;
+			public UInt32 timestamp;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct UserEvent
 		{
-			UInt32 type;
-			UInt32 timestamp;
-			UInt32 windowID;
-			int code;
-			IntPtr data1;
-			IntPtr data2;
+			public UInt32 type;
+			public UInt32 timestamp;
+			public UInt32 windowID;
+			public int code;
+			public IntPtr data1;
+			public IntPtr data2;
 		}
 
 		//Doing nasty union hacks
@@ -539,33 +539,33 @@ namespace OpenTK.Platform.SDL2
 			[FieldOffset(0)]
 			public EventType type;
 			[FieldOffset(0)]
-			WindowEvent window;
+			public WindowEvent window;
 			[FieldOffset(0)]
-			KeyboardEvent key;
+			public KeyboardEvent key;
 			//[FieldOffset(0)]
-			//TextEditingEvent edit;
+			//public TextEditingEvent edit;
 			[FieldOffset(0)]
-			TextInputEvent text;
+			public TextInputEvent text;
 			[FieldOffset(0)]
-			MouseMotionEvent motion;
+			public MouseMotionEvent motion;
 			[FieldOffset(0)]
-			MouseButtonEvent button;
+			public MouseButtonEvent button;
 			[FieldOffset(0)]
-			MouseWheelEvent wheel;
+			public MouseWheelEvent wheel;
 			[FieldOffset(0)]
-			JoyAxisEvent jaxis;
+			public JoyAxisEvent jaxis;
 			[FieldOffset(0)]
-			JoyBallEvent jball;
+			public JoyBallEvent jball;
 			[FieldOffset(0)]
-			JoyHatEvent jhat;
+			public JoyHatEvent jhat;
 			[FieldOffset(0)]
-			JoyButtonEvent jbutton;
+			public JoyButtonEvent jbutton;
 			[FieldOffset(0)]
-			JoyDeviceEvent jdevice;
+			public JoyDeviceEvent jdevice;
 			[FieldOffset(0)]
-			QuitEvent quit;
+			public QuitEvent quit;
 			[FieldOffset(0)]
-			UserEvent user;
+			public UserEvent user;
 		}
 
 		[DllImport(_dll_name, EntryPoint = "SDL_PumpEvents")]
