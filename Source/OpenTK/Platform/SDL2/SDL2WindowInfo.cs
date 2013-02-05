@@ -58,13 +58,19 @@ namespace OpenTK.Platform.SDL2
 			return String.Format("SDL2 Window Info: Pointer {0}, ID {1}", this.window, API.GetWindowID(this.window));
         }
 
-		public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-            if (this.GetType() != obj.GetType()) return false;
-            SDL2WindowInfo info = (SDL2WindowInfo)obj;
+		public override bool Equals (object obj)
+		{
+			if (obj == null)
+				return false;
+			if (this.GetType () != obj.GetType ())
+				return false;
+			SDL2WindowInfo info = (SDL2WindowInfo)obj;
 
-			return API.GetWindowID (this.window) == API.GetWindowID (info.window);
+			bool winid_match;
+			lock (API.sdl_api_lock) {
+				winid_match = API.GetWindowID (this.window) == API.GetWindowID (info.window);
+			}
+			return winid_match;
         }
 
         public override int GetHashCode()

@@ -44,18 +44,22 @@ namespace OpenTK.Platform.SDL2
         public SDL2GLContext (GraphicsMode mode, IWindowInfo windowInfo, IGraphicsContext shared, bool direct,
             int major, int minor, GraphicsContextFlags flags)
 		{
-            
 			SDL2WindowInfo currentWindow = (SDL2WindowInfo)windowInfo;
 			window = currentWindow.WindowHandle;
             
-			Console.WriteLine("Creating context.");
+			Console.WriteLine ("Creating context.");
 			if (shared != null) {
-				Console.WriteLine("Context is shared!");
+				Console.WriteLine ("Context is shared!");
 				shared.MakeCurrent (windowInfo);
-				API.GL_SetAttribute (API.GLAttr.ShareWithCurrentContext, 1);
+				lock (API.sdl_api_lock) {
+					API.GL_SetAttribute (API.GLAttr.ShareWithCurrentContext, 1);
+				}
 			}
 
-			context = API.GL_CreateContext (currentWindow.WindowHandle);
+			lock (API.sdl_api_lock) {
+				context = API.GL_CreateContext (currentWindow.WindowHandle);
+			}
+
 			MakeCurrent (windowInfo);
 
 			if (shared != null) {
@@ -80,12 +84,17 @@ namespace OpenTK.Platform.SDL2
 
 
 
-        bool SupportsExtension(SDL2WindowInfo window, string e)
-        {
-            if (e == null)
-                throw new ArgumentNullException("e");
+        bool SupportsExtension (SDL2WindowInfo window, string e)
+		{
+			if (e == null)
+				throw new ArgumentNullException ("e");
             
-			return API.GL_ExtensionSupported(e);
+			bool supported = false;
+
+			lock (API.sdl_api_lock) {
+				supported = API.GL_ExtensionSupported (e);
+			}
+			return supported;
         }
 
         #endregion
@@ -96,7 +105,9 @@ namespace OpenTK.Platform.SDL2
 
         public override void SwapBuffers()
         {
-			API.GL_SwapWindow(window);
+			lock (API.sdl_api_lock) {
+				API.GL_SwapWindow(window);
+			}
         }
 
         #endregion
@@ -105,27 +116,26 @@ namespace OpenTK.Platform.SDL2
 
         public override void MakeCurrent(IWindowInfo window)
         {
-            if (window == null)
-            {
-				API.GL_MakeCurrent(IntPtr.Zero, IntPtr.Zero);
-				currentThreadContext = IntPtr.Zero;
-				Console.WriteLine ("Disabling context");
-            }
-            else
-            {
-                SDL2WindowInfo w = (SDL2WindowInfo)window;
-				if (API.GL_MakeCurrent(w.WindowHandle, context) < 0)
-				{
-					Console.WriteLine("Error: Could not make context current.");
-				}
-				currentThreadContext = context;
-				this.window = ((SDL2WindowInfo)window).WindowHandle;
-				Console.WriteLine("Enabling GLContext");
-            }
-			Console.WriteLine(Environment.StackTrace);
+			lock (API.sdl_api_lock) {
+	            if (window == null)
+	            {
+					API.GL_MakeCurrent(IntPtr.Zero, IntPtr.Zero);
+					currentThreadContext = IntPtr.Zero;
+				
+	            }
+	            else
+	            {
+	                SDL2WindowInfo w = (SDL2WindowInfo)window;
+					if (API.GL_MakeCurrent(w.WindowHandle, context) < 0)
+					{
+						Console.WriteLine("Error: Could not make context current.");
+					}
+					currentThreadContext = context;
+					this.window = ((SDL2WindowInfo)window).WindowHandle;
+				
+	            }
+			}
 
-
-            
         }
 
         #endregion
@@ -160,9 +170,14 @@ namespace OpenTK.Platform.SDL2
 
         #region GetAddress
 
-        public override IntPtr GetAddress(string function)
-        {
-			return API.GL_GetProcAddress(function);
+        public override IntPtr GetAddress (string function)
+		{
+			IntPtr func = IntPtr.Zero;
+			lock (API.sdl_api_lock) {
+				func = API.GL_GetProcAddress (function);
+			}
+
+			return func;
         }
 
         #endregion

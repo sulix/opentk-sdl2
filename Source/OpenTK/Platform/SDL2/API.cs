@@ -33,6 +33,8 @@ namespace OpenTK.Platform.SDL2
 
         private const string _dll_name = "libSDL2";
         
+		public static Object sdl_api_lock = new Object();
+
   		#endregion
 
 		#region SDL.h
@@ -608,10 +610,12 @@ namespace OpenTK.Platform.SDL2
 		[DllImport("libX11", EntryPoint = "XInitThreads")]
         public extern static int XInitThreads();
 
-        static API()
-        {
-			XInitThreads();
-			Init (INIT_EVERYTHING);
+        static API ()
+		{
+			lock (sdl_api_lock) {
+				XInitThreads ();
+				Init (INIT_EVERYTHING);
+			}
         }
 	}
 	#endregion

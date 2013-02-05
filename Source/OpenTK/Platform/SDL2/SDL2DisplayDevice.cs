@@ -62,7 +62,7 @@ namespace OpenTK.Platform.SDL2
         void RefreshDisplayDevices()
         {
 			List<DisplayDevice> devices = new List<DisplayDevice>();
-			Console.Write (String.Format("GetNumDevices retuns {0}\n",API.GetNumVideoDisplays()));
+
 			for (int i = 0; i < 2; ++i)//API.GetNumVideoDisplays(); ++i)
 			{
 				DisplayDevice dev = new DisplayDevice();

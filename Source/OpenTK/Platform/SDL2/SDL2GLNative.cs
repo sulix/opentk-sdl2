@@ -49,10 +49,8 @@ namespace OpenTK.Platform.SDL2
         SDL2WindowInfo window = new SDL2WindowInfo();
 
         // Legacy input support
-        MouseDevice mouse;
-        readonly KeyPressEventArgs KPEventArgs = new KeyPressEventArgs('\0');
-
-        readonly IntPtr EmptyCursor;
+        //MouseDevice mouse;
+        //readonly KeyPressEventArgs KPEventArgs = new KeyPressEventArgs('\0');
 
 		private SDL2Input inputDriver;
 
@@ -73,11 +71,13 @@ namespace OpenTK.Platform.SDL2
 
 
             Debug.Indent();
-			x = y = 0;
-			API.Init (API.INIT_VIDEO);
-			API.VideoInit("",0);
-			Console.WriteLine(String.Format("SDL_CreateWindow({0},{1},{2},{3},{4},{5})",title, x, y, width, height, OpenTK.Platform.SDL2.API.WindowFlags.OpenGL));
-			IntPtr windowId = API.CreateWindow(title, x, y, width, height, OpenTK.Platform.SDL2.API.WindowFlags.OpenGL);
+
+			IntPtr windowId;
+			lock (API.sdl_api_lock) {
+				API.Init (API.INIT_VIDEO);
+				API.VideoInit("",0);
+				windowId = API.CreateWindow(title, x, y, width, height, OpenTK.Platform.SDL2.API.WindowFlags.OpenGL);
+			}
 			window = new SDL2WindowInfo(windowId);
 
 			inputDriver = new SDL2Input(window);
@@ -103,7 +103,11 @@ namespace OpenTK.Platform.SDL2
         {
             get
             {
-				return ((API.GetWindowFlags(window.WindowHandle) & SDL2.API.WindowFlags.Resizable) != 0);
+				bool isResizable;
+				lock (API.sdl_api_lock) {
+					isResizable = ((API.GetWindowFlags(window.WindowHandle) & SDL2.API.WindowFlags.Resizable) != 0);
+				}
+				return isResizable;
             }
         }
 
@@ -114,8 +118,12 @@ namespace OpenTK.Platform.SDL2
         bool IsWindowBorderHidden
         {
             get
-            {                
-				return ((API.GetWindowFlags(window.WindowHandle) & SDL2.API.WindowFlags.Borderless) != 0);
+            {    
+				bool isBorderless;
+				lock (API.sdl_api_lock) {
+					isBorderless = ((API.GetWindowFlags(window.WindowHandle) & SDL2.API.WindowFlags.Borderless) != 0);
+				}
+				return isBorderless;
             }
         }
                 
@@ -123,9 +131,11 @@ namespace OpenTK.Platform.SDL2
 
         #region void DisableWindowDecorations()
 
-        void DisableWindowDecorations()
-        {
-			API.SetWindowBordered(window.WindowHandle, false);
+        void DisableWindowDecorations ()
+		{
+			lock (API.sdl_api_lock) {
+				API.SetWindowBordered (window.WindowHandle, false);
+			}
         }
         
 
@@ -134,9 +144,11 @@ namespace OpenTK.Platform.SDL2
 
         #region void EnableWindowDecorations()
 
-        void EnableWindowDecorations()
-        {
-			API.SetWindowBordered(window.WindowHandle, true);
+        void EnableWindowDecorations ()
+		{
+			lock (API.sdl_api_lock) {
+				API.SetWindowBordered (window.WindowHandle, true);
+			}
         }
 
 		#endregion
@@ -148,7 +160,13 @@ namespace OpenTK.Platform.SDL2
         public void ProcessEvents ()
 		{
 			API.Event currentEvent;
-			while (API.PollEvent(out currentEvent) != 0) {
+			int finished = 0;
+			while (finished == 0) {
+				lock (API.sdl_api_lock)
+				{
+					finished = API.PollEvent(out currentEvent);
+				}
+				if (finished != 0) break;
 				switch (currentEvent.type) {
 				case API.EventType.Quit:
 					Closed (this, EventArgs.Empty);
@@ -166,12 +184,17 @@ namespace OpenTK.Platform.SDL2
         {
             get {
 				int w,h;
-				API.GetWindowSize(window.WindowHandle, out w, out h);
+				lock (API.sdl_api_lock) {
+					API.GetWindowSize(window.WindowHandle, out w, out h);
+				}
 
 				return new System.Drawing.Rectangle(0,0,w,h); }
             set
             {
-				API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+				lock (API.sdl_api_lock)
+				{
+					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+				}
             }
         }
 
@@ -195,12 +218,16 @@ namespace OpenTK.Platform.SDL2
         public Size Size
         {
             get { int w,h;
-				API.GetWindowSize(window.WindowHandle,out w, out h);
+				lock (API.sdl_api_lock) {
+					API.GetWindowSize(window.WindowHandle,out w, out h);
+				}
 				return new Size(w,h);
 			}
             set
             {
-				API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+				lock (API.sdl_api_lock) {
+					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+				}
             }
         }
 
@@ -302,7 +329,12 @@ namespace OpenTK.Platform.SDL2
         {
             get
             {
-                return (API.GetWindowFlags(window.WindowHandle) & API.WindowFlags.InputFocus) != 0;
+				bool isFocused;
+				lock (API.sdl_api_lock)
+				{
+					isFocused = (API.GetWindowFlags(window.WindowHandle) & API.WindowFlags.InputFocus) != 0;
+				}
+				return isFocused;
             }
         }
 
@@ -430,11 +462,17 @@ namespace OpenTK.Platform.SDL2
         {
             get
 		    {
-				return API.GetWindowTitle(window.WindowHandle);
+				string _title;
+				lock (API.sdl_api_lock) {
+					_title = API.GetWindowTitle(window.WindowHandle);
+				}
+				return _title;
             }
             set
             {
-				API.SetWindowTitle(window.WindowHandle, value);
+				lock (API.sdl_api_lock) {
+					API.SetWindowTitle(window.WindowHandle, value);
+				}
             }
         }
 
@@ -480,7 +518,9 @@ namespace OpenTK.Platform.SDL2
 
         public void DestroyWindow()
         {
-			API.DestroyWindow(window.WindowHandle);
+			lock (API.sdl_api_lock) {
+				API.DestroyWindow(window.WindowHandle);
+			}
 
         }
 
