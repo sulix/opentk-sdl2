@@ -47,6 +47,7 @@ namespace OpenTK.Platform
         {
             if (Configuration.RunningOnWindows) Default = new Windows.WinFactory();
             else if (Configuration.RunningOnMacOS) Default = new MacOS.MacOSFactory();
+			else if (Configuration.RunningOnUnix) Default = new SDL2.SDL2Factory();
             else if (Configuration.RunningOnX11) Default = new X11.X11Factory();
             else Default = new UnsupportedPlatform();
 

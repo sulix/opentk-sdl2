@@ -14,7 +14,6 @@
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>
     </AppDesignerFolder>
@@ -108,25 +107,18 @@
   <ItemGroup>
     <Reference Include="System">
       <Name>System</Name>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.Xml</Name>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="DisplayDevice.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -769,6 +761,15 @@
     </EmbeddedResource>
     <Compile Include="Platform\MacOS\HIDInput.cs" />
     <Compile Include="IntPtrEqualityComparer.cs" />
+    <Compile Include="Platform\SDL2\API.cs" />
+    <Compile Include="Platform\SDL2\SDL2WindowInfo.cs" />
+    <Compile Include="Platform\SDL2\SDL2GLContext.cs" />
+    <Compile Include="Platform\SDL2\SDL2GLNative.cs" />
+    <Compile Include="Platform\SDL2\SDL2DisplayDevice.cs" />
+    <Compile Include="Platform\SDL2\SDL2Factory.cs" />
+    <Compile Include="Platform\SDL2\SDL2GraphicsMode.cs" />
+    <Compile Include="Platform\SDL2\SDL2Keyboard.cs" />
+    <Compile Include="Platform\SDL2\SDL2Input.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -777,4 +778,7 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Platform\SDL2\" />
+  </ItemGroup>
 </Project>
