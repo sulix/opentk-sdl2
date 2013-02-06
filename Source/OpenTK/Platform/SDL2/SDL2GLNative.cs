@@ -167,6 +167,7 @@ namespace OpenTK.Platform.SDL2
 					finished = 1 - API.PollEvent(out currentEvent);
 				}
 				if (finished != 0) break;
+				//Console.WriteLine(String.Format ("Got event {0}", currentEvent.type));
 				switch (currentEvent.type) {
 				case API.EventType.Quit:
 					Closed (this, EventArgs.Empty);
@@ -487,6 +488,7 @@ namespace OpenTK.Platform.SDL2
             {
 				lock (API.sdl_api_lock) {
 					API.SetWindowTitle(window.WindowHandle, value);
+					TitleChanged(this,EventArgs.Empty);
 				}
             }
         }

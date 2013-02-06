@@ -26,21 +26,21 @@ namespace OpenTK.Platform.SDL2
     {
         KeyboardDevice keyboard = new KeyboardDevice();
         MouseDevice mouse = new MouseDevice();
-        List<KeyboardDevice> dummy_keyboard_list = new List<KeyboardDevice>(1);
-        List<MouseDevice> dummy_mice_list = new List<MouseDevice>(1);
+        List<KeyboardDevice> dummy_keyboard_list = new List<KeyboardDevice>();
+        List<MouseDevice> dummy_mice_list = new List<MouseDevice>();
 
         
 
         #region --- Constructors ---
 
-        /// <summary>
-        /// Constructs a new X11Input driver. Creates a hidden InputOnly window, child to
-        /// the main application window, which selects input events and routes them to 
-        /// the device specific drivers (Keyboard, Mouse, Hid).
-        /// </summary>
-        /// <param name="attach">The window which the InputDriver will attach itself on.</param>
         public SDL2Input(IWindowInfo attach)
         {
+			mouse.Description = "Default SDL2 legacy mouse";
+            mouse.DeviceID = IntPtr.Zero;
+            mouse.NumberOfButtons = 12;
+            mouse.NumberOfWheels = 1;
+            dummy_mice_list.Add(mouse);
+
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace OpenTK.Platform.SDL2
 
         public IList<MouseDevice> Mouse
         {
-            get { return (IList<MouseDevice>)dummy_mice_list; } //return mouseDriver.Mouse;
+            get { return dummy_mice_list; } //return mouseDriver.Mouse;
         }
 
         #endregion
