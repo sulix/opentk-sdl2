@@ -48,6 +48,8 @@ namespace OpenTK.Platform.SDL2
 
         SDL2WindowInfo window = new SDL2WindowInfo();
 
+		private bool isFullscreen = false;
+
         // Legacy input support
         //MouseDevice mouse;
         //readonly KeyPressEventArgs KPEventArgs = new KeyPressEventArgs('\0');
@@ -76,7 +78,7 @@ namespace OpenTK.Platform.SDL2
 			lock (API.sdl_api_lock) {
 				API.Init (API.INIT_VIDEO);
 				API.VideoInit("",0);
-				windowId = API.CreateWindow(title, x, y, width, height, OpenTK.Platform.SDL2.API.WindowFlags.OpenGL);
+				windowId = API.CreateWindow(title, x, y, width, height, API.WindowFlags.OpenGL | ((isFullscreen)?API.WindowFlags.Fullscreen:0));
 			}
 			window = new SDL2WindowInfo(windowId);
 
@@ -362,11 +364,20 @@ namespace OpenTK.Platform.SDL2
         {
             get
             {
-                return OpenTK.WindowState.Normal;
+                return isFullscreen?OpenTK.WindowState.Fullscreen:OpenTK.WindowState.Normal;
             }
             set
             {
-				//TODO: Implement
+				if (value == OpenTK.WindowState.Fullscreen)
+				{
+					isFullscreen = true;
+				}
+				else
+				{
+					isFullscreen = false;
+				}
+
+				API.SetWindowFullscreen(window.WindowHandle, isFullscreen?API.WindowFlags.Fullscreen:0);
             }
         }
 

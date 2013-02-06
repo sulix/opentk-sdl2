@@ -630,8 +630,6 @@ namespace OpenTK
         public MouseDevice Mouse
         {
             get {
-				Console.WriteLine (InputDriver.Mouse.Count);
-				Console.WriteLine (InputDriver.Mouse[0].Description);
 				return InputDriver.Mouse.Count > 0 ? InputDriver.Mouse[0] : null; }
         }
 
