@@ -75,6 +75,7 @@ namespace OpenTK.Platform.SDL2
             Debug.Indent();
 
 			IntPtr windowId;
+			isFullscreen = options.HasFlag(GameWindowFlags.Fullscreen);
 			lock (API.sdl_api_lock) {
 				API.Init (API.INIT_VIDEO);
 				API.VideoInit("",0);
@@ -172,7 +173,7 @@ namespace OpenTK.Platform.SDL2
 				//Console.WriteLine(String.Format ("Got event {0}", currentEvent.type));
 				switch (currentEvent.type) {
 				case API.EventType.Quit:
-					Closed (this, EventArgs.Empty);
+					Closing (this, new CancelEventArgs());
 					break;
 				case API.EventType.MouseButtonDown:
 				case API.EventType.MouseButtonUp:
@@ -239,10 +240,19 @@ namespace OpenTK.Platform.SDL2
 			}
             set
             {
+				bool wasFullscreen = isFullscreen;
+				// At the moment, we disable fullscreen mode, do the resize and re-enable it.
+				// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
+				// it work without having to work out how to plumb in the displaymode stuff.
+				if (isFullscreen)
+					WindowState = WindowState.Normal;
 				lock (API.sdl_api_lock) {
 					Console.WriteLine(String.Format ("Size update ({0},{1})",value.Width, value.Height));
 					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 				}
+
+				if (wasFullscreen)
+					WindowState = WindowState.Fullscreen;
 
 				// Do we actually need to do this?
 				Resize(this,EventArgs.Empty);
@@ -376,8 +386,10 @@ namespace OpenTK.Platform.SDL2
 				{
 					isFullscreen = false;
 				}
-
-				API.SetWindowFullscreen(window.WindowHandle, isFullscreen?API.WindowFlags.Fullscreen:0);
+				lock (API.sdl_api_lock)
+				{
+					API.SetWindowFullscreen(window.WindowHandle, isFullscreen?API.WindowFlags.Fullscreen:0);
+				}
             }
         }
 
@@ -537,7 +549,8 @@ namespace OpenTK.Platform.SDL2
 
         public void Exit()
         {
-			//API.DestroyWindow(window.WindowHandle);
+			DestroyWindow();
+			Closed(this,EventArgs.Empty);
         }
 
         #endregion
