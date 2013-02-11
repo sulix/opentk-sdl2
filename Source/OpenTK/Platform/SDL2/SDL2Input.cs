@@ -29,6 +29,8 @@ namespace OpenTK.Platform.SDL2
         List<KeyboardDevice> dummy_keyboard_list = new List<KeyboardDevice>();
         List<MouseDevice> dummy_mice_list = new List<MouseDevice>();
 
+		SDL2KeyMap keymap = new SDL2KeyMap();
+
         
 
         #region --- Constructors ---
@@ -41,6 +43,10 @@ namespace OpenTK.Platform.SDL2
             mouse.NumberOfWheels = 1;
             dummy_mice_list.Add(mouse);
 
+			keyboard.Description = "Default SDL2 legacy keyboard";
+			keyboard.DeviceID = IntPtr.Zero;
+			keyboard.NumberOfKeys = (int)API.Scancode.SDL_NUM_SCANCODES;
+			dummy_keyboard_list.Add (keyboard);
         }
 
         #endregion
@@ -85,7 +91,12 @@ namespace OpenTK.Platform.SDL2
                 case API.EventType.KeyDown:
                 case API.EventType.KeyUp:
 					//TODO: Make this work
-                    bool pressed = e.type == API.EventType.KeyDown;
+                    bool pressed = (e.type == API.EventType.KeyDown);
+					
+					if (keymap.ContainsKey(e.key.keysym.scancode))
+                        keyboard[keymap[e.key.keysym.scancode]] = pressed;
+                    else
+                        Debug.Print("Scancode {0}", e.key.keysym.scancode);
 
 					break;
 

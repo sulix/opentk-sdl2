@@ -184,6 +184,19 @@ namespace OpenTK.Platform.SDL2
 						SDL2Mouse.newestMouse.ProcessEvent(ref currentEvent);
 					}
 					break;
+				case API.EventType.KeyDown:
+				case API.EventType.KeyUp:
+					inputDriver.ProcessEvent(ref currentEvent);
+					if (SDL2Keyboard.newestKeyboard != null) {
+						SDL2Keyboard.newestKeyboard.ProcessEvent(ref currentEvent);
+					}
+
+					// This is horrible, horrible design. To paraphrase Douglas Adams,
+					// OpenTK was not so much designed as congealed.
+					// I'm just gonna pass the old SDL unicode value along for now. (Truncated to 8 bits) :/
+					KeyPress(this,new KeyPressEventArgs((char)currentEvent.key.keysym.unicode));
+
+					break;
 				}
 			}
 

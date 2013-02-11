@@ -771,6 +771,7 @@
     <Compile Include="Platform\SDL2\SDL2Keyboard.cs" />
     <Compile Include="Platform\SDL2\SDL2Input.cs" />
     <Compile Include="Platform\SDL2\SDL2Mouse.cs" />
+    <Compile Include="Platform\SDL2\SDL2KeyMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

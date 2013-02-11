@@ -37,10 +37,18 @@ namespace OpenTK.Platform.SDL2
     sealed class SDL2Keyboard : IKeyboardDriver2
     {
         KeyboardState state = new KeyboardState();
+		SDL2KeyMap keymap = new SDL2KeyMap();
+		public static SDL2Keyboard newestKeyboard;
 
         public SDL2Keyboard()
         {
+			newestKeyboard = this;
         }
+
+		~SDL2Keyboard ()
+		{
+			newestKeyboard = null;
+		}
 
         public KeyboardState GetState()
         {
@@ -63,6 +71,30 @@ namespace OpenTK.Platform.SDL2
                 return "SDL2 Fake Keyboard";
             else
                 return String.Empty;
+        }
+
+		internal void ProcessEvent(ref API.Event e)
+        {
+			Debug.Print("Scancode {0} -> {1}", e.key.keysym.scancode, keymap[e.key.keysym.scancode]);
+            switch (e.type)
+            {
+                case API.EventType.KeyDown:
+					if (keymap.ContainsKey(e.key.keysym.scancode))
+                        state.EnableBit((int)keymap[e.key.keysym.scancode]);
+                    else
+                        Debug.Print("Scancode {0}", e.key.keysym.scancode);
+
+					break;
+                case API.EventType.KeyUp:
+					//TODO: Make this work
+                    if (keymap.ContainsKey(e.key.keysym.scancode))
+                        state.DisableBit((int)keymap[e.key.keysym.scancode]);
+                    else
+                        Debug.Print("Scancode {0}", e.key.keysym.scancode);
+
+					break;
+					
+            }
         }
 
         void ProcessEvents()
