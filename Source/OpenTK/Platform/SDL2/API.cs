@@ -902,6 +902,59 @@ namespace OpenTK.Platform.SDL2
 
 		#endregion
 
+		#region SDL_mouse
+
+		public enum SystemCursor
+		{
+			Arrow,
+			IBeam,
+			Wait,
+			Crosshair,
+			WaitArrow,
+			SizeNWSE,
+			SizeNESW,
+			SizeWE,
+			SizeNS,
+			SizeAll,
+			No,
+			Hand,
+			SDL_NUM_SYSTEM_CURSORS
+		}
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetMouseFocus")]
+		extern public static IntPtr GetMouseFocus();
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetMouseState")]
+		extern public static UInt32 GetMouseState(out int x, out int y);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetRelativeMouseState")]
+		extern public static UInt32 GetRelativeMouseState(out int x, out int y);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_WarpMouseInWindow")]
+		extern public static void WarpMouseInWindow(IntPtr window, int x, int y);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_SetRelativeMouseMode")]
+		extern public static int SetRelativeMouseMose(bool enabled);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetRelativeMouseMode")]
+		extern public static bool GetRelativeMouseMode();
+
+		//TODO: CreateCursor, CreateColorCursor
+
+		[DllImport(_dll_name, EntryPoint = "SDL_CreateSystemCursor")]
+		extern public static IntPtr CreateSystemCursor(SystemCursor id);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_SetCursor")]
+		extern public static void SetCursor(IntPtr cursor);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetCursor")]
+		extern public static IntPtr GetCursor();
+
+		[DllImport(_dll_name, EntryPoint = "SDL_ShowCursor")]
+		extern public static int ShowCursor(int toggle);
+
+		#endregion
+
 		//TODO: Remove this for non-X11 based platforms
 		[DllImport("libX11", EntryPoint = "XInitThreads")]
         public extern static int XInitThreads();

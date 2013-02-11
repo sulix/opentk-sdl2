@@ -448,10 +448,19 @@ namespace OpenTK.Platform.SDL2
 
         public bool CursorVisible
         {
-            get { return true; }
+            get { 
+				bool visible = true;
+				lock (API.sdl_api_lock)
+				{
+					visible = (API.ShowCursor(-1) == 1);
+				}
+				return visible; }
             set
             {
-				//TODO Implement
+				lock (API.sdl_api_lock)
+				{
+					API.ShowCursor(value?1:0);
+				}
             }
         }
 
