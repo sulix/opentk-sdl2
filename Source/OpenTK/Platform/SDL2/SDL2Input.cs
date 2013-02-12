@@ -29,6 +29,8 @@ namespace OpenTK.Platform.SDL2
         List<KeyboardDevice> dummy_keyboard_list = new List<KeyboardDevice>();
         List<MouseDevice> dummy_mice_list = new List<MouseDevice>();
 
+		SDL2Joystick joystickDriver = new SDL2Joystick();
+
 		SDL2KeyMap keymap = new SDL2KeyMap();
 
         
@@ -76,7 +78,7 @@ namespace OpenTK.Platform.SDL2
 
         public IList<JoystickDevice> Joysticks
         {
-            get { return null; }
+            get { return joystickDriver.Joysticks; }
         }
 
         #endregion

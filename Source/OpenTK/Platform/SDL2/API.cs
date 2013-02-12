@@ -955,6 +955,63 @@ namespace OpenTK.Platform.SDL2
 
 		#endregion
 
+		#region SDL_joystick
+
+		[DllImport(_dll_name, EntryPoint = "SDL_NumJoysticks")]
+		extern public static int NumJoysticks();
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickNameForIndex")]
+		extern public static string JoystickNameForIndex(int device_index);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickOpen")]
+		extern public static IntPtr JoystickOpen(int device_index);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickName")]
+		extern public static string JoystickName(IntPtr joystick);
+
+		//TODO: GUID stuff
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickGetAttached")]
+		extern public static bool JoystickGetAttached(IntPtr joystick);
+
+		//TODO: Instance ID
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickNumAxes")]
+		extern public static int JoystickNumAxes(IntPtr joystick);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickNumBalls")]
+		extern public static int JoystickNumBalls(IntPtr joystick);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickNumHats")]
+		extern public static int JoystickNumHats(IntPtr joystick);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickNumButtons")]
+		extern public static int JoystickNumButtons(IntPtr joystick);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickUpdate")]
+		extern public static void JoystickUpdate();
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickEventState")]
+		extern public static int JoystickEventState(int state);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickGetAxis")]
+		extern public static Int16 JoystickGetAxis(IntPtr joystick, int axis);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickGetHat")]
+		extern public static Byte JoystickGetHat(IntPtr joystick, int hat);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickGetBall")]
+		extern public static int JoystickGetBall(IntPtr joystick, int ball, out int dx, out int dy);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickGetButton")]
+		extern public static Byte JoystickGetButton(IntPtr joystick, int button);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickClose")]
+		extern public static void JoystickClose(IntPtr joystick);
+
+
+		#endregion
+
 		//TODO: Remove this for non-X11 based platforms
 		[DllImport("libX11", EntryPoint = "XInitThreads")]
         public extern static int XInitThreads();
