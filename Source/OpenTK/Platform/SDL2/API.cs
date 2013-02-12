@@ -690,7 +690,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct WindowEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			public Byte eventid;
@@ -704,7 +704,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct KeyboardEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			public Byte state;
@@ -717,7 +717,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct TextInputEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			//public char text[32]; //TODO: Work out how fixed sized arrays actually work in C#
@@ -726,7 +726,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct MouseMotionEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			public Byte state;
@@ -742,7 +742,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct MouseButtonEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			public Byte button;
@@ -756,7 +756,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct MouseWheelEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			public int x;
@@ -766,7 +766,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyAxisEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public Byte which;
 			public Byte axis;
@@ -778,7 +778,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyBallEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public Byte which;
 			public Byte ball;
@@ -791,7 +791,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyHatEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public Byte which;
 			public Byte hat;
@@ -802,7 +802,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyButtonEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public Byte which;
 			public Byte button;
@@ -813,7 +813,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct JoyDeviceEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 which;
 		}
@@ -823,7 +823,7 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct DropEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public string file;
 		}
@@ -832,14 +832,14 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct QuitEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct UserEvent
 		{
-			public UInt32 type;
+			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
 			public int code;

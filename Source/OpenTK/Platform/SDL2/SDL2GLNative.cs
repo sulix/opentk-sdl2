@@ -173,7 +173,13 @@ namespace OpenTK.Platform.SDL2
 				//Console.WriteLine(String.Format ("Got event {0}", currentEvent.type));
 				switch (currentEvent.type) {
 				case API.EventType.Quit:
-					Closing (this, new CancelEventArgs());
+					CancelEventArgs ceargs = new CancelEventArgs();
+					Closing (this, ceargs);
+					if (!ceargs.Cancel)
+					{
+						DestroyWindow();
+						Closed(this, new EventArgs());
+					}
 					break;
 				case API.EventType.MouseButtonDown:
 				case API.EventType.MouseButtonUp:
@@ -571,10 +577,16 @@ namespace OpenTK.Platform.SDL2
 
         #region public void Exit()
 
-        public void Exit()
-        {
-			DestroyWindow();
-			Closed(this,EventArgs.Empty);
+        public void Exit ()
+		{
+			// This code makes me want to curl up and cry.
+			// I'm deathly afraid of what C# will do to what _should_ be a union.
+			API.Event quitEvent = new API.Event();
+			quitEvent.quit = new API.QuitEvent();
+			quitEvent.type = API.EventType.Quit;
+			lock (API.sdl_api_lock) {
+				API.PushEvent (ref quitEvent);
+			}
         }
 
         #endregion
@@ -584,7 +596,9 @@ namespace OpenTK.Platform.SDL2
         public void DestroyWindow()
         {
 			lock (API.sdl_api_lock) {
+
 				API.DestroyWindow(window.WindowHandle);
+				Closed(this, new EventArgs());
 			}
 
         }
