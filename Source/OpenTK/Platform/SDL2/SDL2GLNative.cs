@@ -460,6 +460,8 @@ namespace OpenTK.Platform.SDL2
 				lock (API.sdl_api_lock)
 				{
 					API.ShowCursor(value?1:0);
+					// This is apparently OpenTK behaviour.
+					API.SetWindowGrab(window.WindowHandle, !value);
 				}
             }
         }

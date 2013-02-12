@@ -280,12 +280,31 @@ namespace OpenTK.Platform.SDL2
 
 		//TODO *WindowSurface*
 
-		//TODO: Grab, Brightness, Gamma
+		[DllImport(_dll_name, EntryPoint = "SDL_SetWindowGrab")]
+		extern public static void SetWindowGrab(IntPtr window, bool grabbed);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetWindowGrab")]
+		extern public static bool GetWindowGrab(IntPtr window);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_SetWindowBrightness")]
+		extern public static int SetWindowBrightness(IntPtr window, float brightness);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetWindowBrightness")]
+		extern public static float GetWindowBrightness(IntPtr window);
+
+		//TODO: Gamma
 
 		[DllImport(_dll_name, EntryPoint = "SDL_DestroyWindow")]
 		extern public static void DestroyWindow(IntPtr window);
 
-		//TODO: ScreenSaver
+		[DllImport(_dll_name, EntryPoint = "SDL_IsScreenSaverEnabled")]
+		extern public static bool IsScreenSaverEnabled();
+
+		[DllImport(_dll_name, EntryPoint = "SDL_EnableScreenSaver")]
+		extern public static void EnableScreenSaver();
+
+		[DllImport(_dll_name, EntryPoint = "SDL_DisableScreenSaver")]
+		extern public static void DisableScreenSaver();
 
 		// OpenGL support functions
 
