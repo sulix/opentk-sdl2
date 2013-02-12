@@ -59,14 +59,34 @@ namespace OpenTK.Platform.SDL2
 
         #region Private Methods
 
-        void RefreshDisplayDevices()
-        {
-			List<DisplayDevice> devices = new List<DisplayDevice>();
+        void RefreshDisplayDevices ()
+		{
+			List<DisplayDevice> devices = new List<DisplayDevice> ();
 
-			for (int i = 0; i < 2; ++i)//API.GetNumVideoDisplays(); ++i)
+			int numVideoDevices = 0;
+			lock (API.sdl_api_lock) {
+				numVideoDevices = API.GetNumVideoDisplays ();
+			}
+
+			for (int i = 0; i < numVideoDevices; ++i)
 			{
 				DisplayDevice dev = new DisplayDevice();
+				List<DisplayResolution> resolutions = new List<DisplayResolution>();
 				if (i == 0) dev.IsPrimary = true;
+				int numResolutions = 0;
+				lock (API.sdl_api_lock) {
+					numResolutions = API.GetNumDisplayModes(i);
+				}
+				for (int res = 0; res < numResolutions; ++res)
+				{
+					lock (API.sdl_api_lock)
+					{
+						API.DisplayMode modeRect;
+						API.GetDisplayMode(i, res, out modeRect);
+						resolutions.Add (new DisplayResolution(0, 0, modeRect.w, modeRect.h, 32, modeRect.refresh_rate));
+					}
+				}
+				dev.AvailableResolutions = resolutions;
 				devices.Add(dev);
 			}
              
@@ -98,9 +118,13 @@ namespace OpenTK.Platform.SDL2
 
         #region static float FindCurrentRefreshRate(int screen)
 
-        static float FindCurrentRefreshRate(int screen)
-        {
-			return 60.0f;
+        static float FindCurrentRefreshRate (int screen)
+		{
+			API.DisplayMode mode;
+			lock (API.sdl_api_lock) {
+				API.GetCurrentDisplayMode (screen, out mode);
+			}
+			return mode.refresh_rate;
         }
 
         #endregion

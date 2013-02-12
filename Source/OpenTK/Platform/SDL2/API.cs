@@ -67,15 +67,15 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct Point
 		{
-			int x;
-			int y;
+			public int x;
+			public int y;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct Rect
 		{
-			int x, y;
-			int w, h;
+			public int x, y;
+			public int w, h;
 		}
 
 
@@ -88,10 +88,10 @@ namespace OpenTK.Platform.SDL2
 		[StructLayout(LayoutKind.Sequential)]
 		internal struct DisplayMode
 		{
-			UInt32 format;
-			int w;
-			int h;
-			int refresh_rate;
+			public UInt32 format;
+			public int w;
+			public int h;
+			public int refresh_rate;
 			IntPtr driverdata;
 		}
 
@@ -201,13 +201,13 @@ namespace OpenTK.Platform.SDL2
 		extern public static int GetNumDisplayModes(int displayIndex);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_GetDisplayMode")]
-		extern public static int GetDisplayMode(int displayIndex, int modeIndex, out API.Rect mode);
+		extern public static int GetDisplayMode(int displayIndex, int modeIndex, out API.DisplayMode mode);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_GetDesktopDisplayMode")]
-		extern public static int GetDesktopDisplayMode(int displayIndex, out API.Rect mode);
+		extern public static int GetDesktopDisplayMode(int displayIndex, out API.DisplayMode mode);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_GetCurrentDisplayMode")]
-		extern public static int GetCurrentDisplayMode(int displayIndex, out API.Rect mode);
+		extern public static int GetCurrentDisplayMode(int displayIndex, out API.DisplayMode mode);
 
 		//TODO: GetClosestDisplayMode
 
