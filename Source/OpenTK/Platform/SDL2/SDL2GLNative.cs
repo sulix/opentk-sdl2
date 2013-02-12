@@ -79,7 +79,8 @@ namespace OpenTK.Platform.SDL2
 			lock (API.sdl_api_lock) {
 				API.Init (API.INIT_VIDEO);
 				API.VideoInit("",0);
-				windowId = API.CreateWindow(title, x, y, width, height, API.WindowFlags.OpenGL | ((isFullscreen)?API.WindowFlags.Fullscreen:0));
+				// NOTE: Seriously, letting the user set x and y coords is a _bad_ idea. We'll let the WM take care of it.
+				windowId = API.CreateWindow(title, 0x1FFF0000, 0x1FFF0000, width, height, API.WindowFlags.OpenGL | ((isFullscreen)?API.WindowFlags.Fullscreen:0));
 			}
 			window = new SDL2WindowInfo(windowId);
 
@@ -210,6 +211,53 @@ namespace OpenTK.Platform.SDL2
 
         #endregion
 
+		#region Private Fullscreen Resolution Impl
+		// So: this function doesn't work, and I'm going to restore the old ways.
+		// What was the problem? SetWindowDisplayMode() sets the display mode for
+		// the _next_ time fullscreen is triggered. Keeping the code in case this is fixed.
+		private int FullscreenChangeRes (int x, int y)
+		{
+			API.DisplayMode desired = new API.DisplayMode ();
+			desired.w = x;
+			desired.h = y;
+			// Maybe we should take the existing window's format?
+			desired.format = 0;
+			desired.refresh_rate = 0;
+
+			API.DisplayMode closest;
+
+			int desired_display = 0;
+
+			IntPtr mode_success = IntPtr.Zero;
+
+			lock (API.sdl_api_lock) {
+				desired_display = API.GetWindowDisplay (window.WindowHandle);
+
+				mode_success = API.GetClosestDisplayMode (desired_display, ref desired, out closest);
+
+			}
+
+			if (mode_success == IntPtr.Zero) {
+				Console.WriteLine (String.Format ("Could not find {0}x{1} mode on display {2}", x, y, desired_display));
+				return -1;
+			}
+
+			Console.WriteLine("Closest:");
+			Console.WriteLine(String.Format ("w: {0}, h: {1}, rf_rate: {2}, fmt: {3}",closest.w, closest.h, closest.refresh_rate, closest.format));
+
+			int res = -1;
+			lock (API.sdl_api_lock) {
+				res = API.SetWindowDisplayMode (window.WindowHandle, ref closest);
+			}
+			if (res < 0) {
+				Console.WriteLine (String.Format ("Failed to change to resolution {0}x{1} on {2}", x, y, desired_display));
+			}
+			return res;
+
+		}
+
+		#endregion
+
         #region Bounds
 
         public Rectangle Bounds
@@ -226,7 +274,7 @@ namespace OpenTK.Platform.SDL2
 				bool wasFullscreen = isFullscreen;
 				// At the moment, we disable fullscreen mode, do the resize and re-enable it.
 				// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
-				// it work without having to work out how to plumb in the displaymode stuff.
+				// it work, given the SetWindowDisplayMode stuff is quite useless.
 				if (isFullscreen)
 					WindowState = WindowState.Normal;
 
@@ -235,7 +283,7 @@ namespace OpenTK.Platform.SDL2
 					Console.WriteLine(String.Format ("Bounds update ({0},{1})",value.Width, value.Height));
 					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 				}
-				
+
 				if (wasFullscreen)
 					WindowState = WindowState.Fullscreen;
 
@@ -273,9 +321,10 @@ namespace OpenTK.Platform.SDL2
 				bool wasFullscreen = isFullscreen;
 				// At the moment, we disable fullscreen mode, do the resize and re-enable it.
 				// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
-				// it work without having to work out how to plumb in the displaymode stuff.
+				// it work, given the SetWindowDisplayMode stuff is quite useless.
 				if (isFullscreen)
 					WindowState = WindowState.Normal;
+
 				lock (API.sdl_api_lock) {
 					Console.WriteLine(String.Format ("Size update ({0},{1})",value.Width, value.Height));
 					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);

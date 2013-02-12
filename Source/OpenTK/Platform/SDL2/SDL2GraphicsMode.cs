@@ -18,10 +18,7 @@ namespace OpenTK.Platform.SDL2
 {
     class SDL2GraphicsMode : IGraphicsMode
     {
-        // Todo: Add custom visual selection algorithm, instead of ChooseFBConfig/ChooseVisual.
-        // It seems the Choose* methods do not take multisampling into account (at least on some
-        // drivers).
-        
+
         #region Constructors
 
         public SDL2GraphicsMode()
@@ -32,10 +29,12 @@ namespace OpenTK.Platform.SDL2
 
         #region IGraphicsMode Members
 
-        public GraphicsMode SelectGraphicsMode(ColorFormat color, int depth, int stencil, int samples, ColorFormat accum,
+        public GraphicsMode SelectGraphicsMode (ColorFormat color, int depth, int stencil, int samples, ColorFormat accum,
                                                int buffers, bool stereo)
-        {
+		{
 			//TODO: Implement
+			// Actually, you know what, never mind. This will all work magically on anything from the last
+			// decade anyway.
             return new GraphicsMode(IntPtr.Zero,color,depth,stencil,samples,accum,buffers,stereo);
 
         }

@@ -209,12 +209,17 @@ namespace OpenTK.Platform.SDL2
 		[DllImport(_dll_name, EntryPoint = "SDL_GetCurrentDisplayMode")]
 		extern public static int GetCurrentDisplayMode(int displayIndex, out API.DisplayMode mode);
 
-		//TODO: GetClosestDisplayMode
+		[DllImport(_dll_name, EntryPoint = "SDL_GetClosestDisplayMode")]
+		extern public static IntPtr GetClosestDisplayMode(int displayIndex, ref API.DisplayMode mode, out API.DisplayMode closest);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_GetWindowDisplay")]
 		extern public static int GetWindowDisplay(IntPtr window);
 
-		//TODO: Set/Get WindowDisplayMode
+		[DllImport(_dll_name, EntryPoint = "SDL_SetWindowDisplayMode")]
+		extern public static int SetWindowDisplayMode(IntPtr window, ref API.DisplayMode mode);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GetWindowDisplayMode")]
+		extern public static int GetWindowDisplayMode(IntPtr window, out API.DisplayMode mode);
 
 		//TODO: GetWindowPixelFormat
 
