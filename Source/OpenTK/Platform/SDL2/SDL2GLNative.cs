@@ -271,23 +271,26 @@ namespace OpenTK.Platform.SDL2
 				return new System.Drawing.Rectangle(0,0,w,h); }
             set
             {	
-				bool wasFullscreen = isFullscreen;
-				// At the moment, we disable fullscreen mode, do the resize and re-enable it.
-				// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
-				// it work, given the SetWindowDisplayMode stuff is quite useless.
-				if (isFullscreen)
-					WindowState = WindowState.Normal;
-
-				lock (API.sdl_api_lock)
+				if (value != Bounds)
 				{
-					Console.WriteLine(String.Format ("Bounds update ({0},{1})",value.Width, value.Height));
-					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+					bool wasFullscreen = isFullscreen;
+					// At the moment, we disable fullscreen mode, do the resize and re-enable it.
+					// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
+					// it work, given the SetWindowDisplayMode stuff is quite useless.
+					if (isFullscreen)
+						WindowState = WindowState.Normal;
+
+					lock (API.sdl_api_lock)
+					{
+						Console.WriteLine(String.Format ("Bounds update ({0},{1})",value.Width, value.Height));
+						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+					}
+
+					if (wasFullscreen)
+						WindowState = WindowState.Fullscreen;
+
+					Resize(this,EventArgs.Empty);
 				}
-
-				if (wasFullscreen)
-					WindowState = WindowState.Fullscreen;
-
-				Resize(this,EventArgs.Empty);
             }
         }
 
@@ -318,23 +321,26 @@ namespace OpenTK.Platform.SDL2
 			}
             set
             {
-				bool wasFullscreen = isFullscreen;
-				// At the moment, we disable fullscreen mode, do the resize and re-enable it.
-				// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
-				// it work, given the SetWindowDisplayMode stuff is quite useless.
-				if (isFullscreen)
-					WindowState = WindowState.Normal;
+				if (value != Size)
+				{
+					bool wasFullscreen = isFullscreen;
+					// At the moment, we disable fullscreen mode, do the resize and re-enable it.
+					// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
+					// it work, given the SetWindowDisplayMode stuff is quite useless.
+					if (isFullscreen)
+						WindowState = WindowState.Normal;
 
-				lock (API.sdl_api_lock) {
-					Console.WriteLine(String.Format ("Size update ({0},{1})",value.Width, value.Height));
-					API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+					lock (API.sdl_api_lock) {
+						Console.WriteLine(String.Format ("Size update ({0},{1})",value.Width, value.Height));
+						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+					}
+
+					if (wasFullscreen)
+						WindowState = WindowState.Fullscreen;
+
+					// Do we actually need to do this?
+					Resize(this,EventArgs.Empty);
 				}
-
-				if (wasFullscreen)
-					WindowState = WindowState.Fullscreen;
-
-				// Do we actually need to do this?
-				Resize(this,EventArgs.Empty);
             }
         }
 
