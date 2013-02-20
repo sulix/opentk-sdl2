@@ -1036,6 +1036,108 @@ namespace OpenTK.Platform.SDL2
 
 		#endregion
 
+		#region SDL_gamecontroller
+
+		public enum ControllerBindType
+		{
+			None = 0,
+			Button,
+			Axis,
+			Hat
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		public struct ControllerButtonBind
+		{
+			[FieldOffset(0)]
+			public ControllerBindType bindType; //m_eBindType in the SDL headers, which seems a Valve-ism
+			[FieldOffset(4)]
+			public int button;
+			[FieldOffset(4)]
+			public int axis;
+			[FieldOffset(4)]
+			public int hat;
+			[FieldOffset(8)]
+			public int hat_mask;
+		}
+
+		[DllImport(_dll_name, EntryPoint = "SDL_IsGameController")]
+		extern public static bool IsGameController(int joystick_index);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerNameForIndex")]
+		extern public static string GameControllerNameForIndex(int joystick_index);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerOpen")]
+		extern public static IntPtr GameControllerOpen(int joystick_index);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerName")]
+		extern public static string GameControllerName(IntPtr gamecontroller);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetAttached")]
+		extern public static bool GameControllerGetAttached(IntPtr gamecontroller);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetJoystick")]
+		extern public static IntPtr GameControllerGetJoystick(IntPtr gamecontroller);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerEventState")]
+		extern public static int GameControllerEventState(int state);
+
+		//The list of "axii" available from a controller. Pretty certain this should be "axes" :)
+		public enum ControllerAxis
+		{
+			Invalid = -1,
+			LeftX,
+			LeftY,
+			RightX,
+			RightY,
+			TriggerLeft,
+			TriggerRight,
+			Max
+		}
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetAxisFromString")]
+		extern public static ControllerAxis GameControllerGetAxisFromString(string pchString);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetBindForAxis")]
+		extern public static ControllerButtonBind GameControllerGetBindForAxis(IntPtr gamecontroller, ControllerAxis axis);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetAxis")]
+		extern public static Int16 GameControllerGetAxis(IntPtr gamecontroller, ControllerAxis axis);
+
+		public enum ControllerButton
+		{
+			Invalid = -1,
+			A,
+			B,
+			X,
+			Y,
+			Back,
+			Guide,
+			Start,
+			LeftStick,
+			RightStick,
+			LeftShoulder,
+			RightShoulder,
+			DPadUp,
+			DPadDown,
+			DPadLeft,
+			DPadRight,
+			Max
+		}
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetButtonFromString")]
+		extern public static ControllerButton GameControllerGetButtonFromString(string pchString);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetBindForButton")]
+		extern public static ControllerButtonBind GameControllerGetBindForAxis(IntPtr gamecontroller, ControllerButton button);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerGetButton")]
+		extern public static Byte GameControllerGetButton(IntPtr gamecontroller, ControllerButton button);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerClose")]
+		extern public static void GameControllerClose(IntPtr gamecontroller);
+
+		#endregion
 		//TODO: Remove this for non-X11 based platforms
 		[DllImport("libX11", EntryPoint = "XInitThreads")]
         public extern static int XInitThreads();
