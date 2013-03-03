@@ -998,7 +998,8 @@ namespace OpenTK.Platform.SDL2
 		[DllImport(_dll_name, EntryPoint = "SDL_JoystickGetAttached")]
 		extern public static bool JoystickGetAttached(IntPtr joystick);
 
-		//TODO: Instance ID
+		[DllImport(_dll_name, EntryPoint = "SDL_JoystickInstanceID")]
+		extern public static UInt32 JoystickInstanceID(IntPtr joystick);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_JoystickNumAxes")]
 		extern public static int JoystickNumAxes(IntPtr joystick);
