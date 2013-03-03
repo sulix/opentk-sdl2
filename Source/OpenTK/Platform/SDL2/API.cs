@@ -1082,6 +1082,9 @@ namespace OpenTK.Platform.SDL2
 		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerEventState")]
 		extern public static int GameControllerEventState(int state);
 
+		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerUpdate")]
+		extern public static void GameControllerUpdate();
+
 		//The list of "axii" available from a controller. Pretty certain this should be "axes" :)
 		public enum ControllerAxis
 		{
