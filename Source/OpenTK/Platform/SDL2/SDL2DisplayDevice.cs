@@ -63,9 +63,12 @@ namespace OpenTK.Platform.SDL2
 		{
 			List<DisplayDevice> devices = new List<DisplayDevice> ();
 
+			System.Console.WriteLine("Refreshing display devices.");
+
 			int numVideoDevices = 0;
 			lock (API.sdl_api_lock) {
 				numVideoDevices = API.GetNumVideoDisplays ();
+				System.Console.WriteLine(String.Format("Got {0} displays!",numVideoDevices));
 			}
 
 			for (int i = 0; i < numVideoDevices; ++i)

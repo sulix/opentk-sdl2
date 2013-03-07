@@ -702,8 +702,8 @@ namespace OpenTK.Platform.SDL2
 			public Byte padding1;
 			public Byte padding2;
 			public Byte padding3;
-			public int data1;
-			public int data2;
+			public Int32 data1;
+			public Int32 data2;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -734,14 +734,15 @@ namespace OpenTK.Platform.SDL2
 			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
+			public UInt32 which;
 			public Byte state;
 			public Byte padding1;
 			public Byte padding2;
 			public Byte padding3;
-			public int x;
-			public int y;
-			public int xrel;
-			public int yrel;
+			public Int32 x;
+			public Int32 y;
+			public Int32 xrel;
+			public Int32 yrel;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -750,12 +751,13 @@ namespace OpenTK.Platform.SDL2
 			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
+			public UInt32 which;
 			public Byte button;
 			public Byte state;
 			public Byte padding1;
 			public Byte padding2;
-			public int x;
-			public int y;
+			public Int32 x;
+			public Int32 y;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -764,8 +766,9 @@ namespace OpenTK.Platform.SDL2
 			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
-			public int x;
-			public int y;
+			public UInt32 which;
+			public Int32 x;
+			public Int32 y;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -847,7 +850,7 @@ namespace OpenTK.Platform.SDL2
 			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
-			public int code;
+			public Int32 code;
 			public IntPtr data1;
 			public IntPtr data2;
 		}
@@ -1149,10 +1152,12 @@ namespace OpenTK.Platform.SDL2
         static API ()
 		{
 			lock (sdl_api_lock) {
+				System.Console.WriteLine("Initializing SDL2");
 				//TODO: Only do this on X11 platforms. It's needed for threaded SDL/GL.
 				XInitThreads ();
 				// We init video now, because pretty much everything needs it.
 				Init (INIT_VIDEO);
+				System.Console.WriteLine("Initialized SDL2 (VIDEO)");
 			}
         }
 	}
