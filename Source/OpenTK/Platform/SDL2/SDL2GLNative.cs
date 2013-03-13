@@ -171,7 +171,6 @@ namespace OpenTK.Platform.SDL2
 					finished = 1 - API.PollEvent(out currentEvent);
 				}
 				if (finished != 0) break;
-				//Console.WriteLine(String.Format ("Got event {0}", currentEvent.type));
 				switch (currentEvent.type) {
 				case API.EventType.Quit:
 					CancelEventArgs ceargs = new CancelEventArgs();
@@ -282,7 +281,6 @@ namespace OpenTK.Platform.SDL2
 
 					lock (API.sdl_api_lock)
 					{
-						Console.WriteLine(String.Format ("Bounds update ({0},{1})",value.Width, value.Height));
 						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 					}
 
@@ -331,7 +329,6 @@ namespace OpenTK.Platform.SDL2
 						WindowState = WindowState.Normal;
 
 					lock (API.sdl_api_lock) {
-						Console.WriteLine(String.Format ("Size update ({0},{1})",value.Width, value.Height));
 						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 					}
 

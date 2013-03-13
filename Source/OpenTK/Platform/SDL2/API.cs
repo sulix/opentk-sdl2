@@ -1152,12 +1152,10 @@ namespace OpenTK.Platform.SDL2
         static API ()
 		{
 			lock (sdl_api_lock) {
-				System.Console.WriteLine("Initializing SDL2");
 				//TODO: Only do this on X11 platforms. It's needed for threaded SDL/GL.
 				XInitThreads ();
 				// We init video now, because pretty much everything needs it.
 				Init (INIT_VIDEO);
-				System.Console.WriteLine("Initialized SDL2 (VIDEO)");
 			}
         }
 	}

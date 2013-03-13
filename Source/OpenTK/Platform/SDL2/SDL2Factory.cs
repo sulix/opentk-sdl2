@@ -52,7 +52,6 @@ namespace OpenTK.Platform.SDL2
 
         public virtual IDisplayDeviceDriver CreateDisplayDeviceDriver()
         {
-			System.Console.WriteLine("Creating display device driver...");
             return new SDL2DisplayDevice();
         }
 

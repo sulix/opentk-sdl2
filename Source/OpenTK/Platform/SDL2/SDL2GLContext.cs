@@ -47,9 +47,7 @@ namespace OpenTK.Platform.SDL2
 			SDL2WindowInfo currentWindow = (SDL2WindowInfo)windowInfo;
 			window = currentWindow.WindowHandle;
             
-			Console.WriteLine ("Creating context.");
 			if (shared != null) {
-				Console.WriteLine ("Context is shared!");
 				shared.MakeCurrent (windowInfo);
 				lock (API.sdl_api_lock) {
 					API.GL_SetAttribute (API.GLAttr.ShareWithCurrentContext, 1);
