@@ -113,7 +113,7 @@ namespace OpenTK.Platform.SDL2
 			Foreign = 0x00000800
 		}
 
-		internal enum WindowEventId// : int
+		internal enum WindowEventId : byte
 		{
 			None,
 			Shown,
@@ -698,7 +698,7 @@ namespace OpenTK.Platform.SDL2
 			public EventType type;
 			public UInt32 timestamp;
 			public UInt32 windowID;
-			public Byte eventid;
+			public WindowEventId eventid;
 			public Byte padding1;
 			public Byte padding2;
 			public Byte padding3;

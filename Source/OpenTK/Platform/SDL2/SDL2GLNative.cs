@@ -203,6 +203,15 @@ namespace OpenTK.Platform.SDL2
 					KeyPress(this,new KeyPressEventArgs((char)currentEvent.key.keysym.unicode));
 
 					break;
+				case API.EventType.WindowEvent:
+					switch (currentEvent.window.eventid)
+					{
+					//TODO: Should we use SizeChanged here and get rid of the other Resize() calls?
+					case API.WindowEventId.Resized:
+						Resize(this, EventArgs.Empty);
+						break;
+					}
+					break;
 				}
 			}
 
@@ -472,6 +481,7 @@ namespace OpenTK.Platform.SDL2
 				{
 					API.SetWindowFullscreen(window.WindowHandle, isFullscreen?API.WindowFlags.Fullscreen:0);
 				}
+				Resize(this, EventArgs.Empty);
             }
         }
 
