@@ -46,6 +46,8 @@ namespace OpenTK.Platform.SDL2
         
         const int _min_width = 30, _min_height = 30;
 
+		int desiredSizeX = 0, desiredSizeY = 0;
+
         SDL2WindowInfo window = new SDL2WindowInfo();
 
 		private bool isFullscreen = false;
@@ -75,6 +77,8 @@ namespace OpenTK.Platform.SDL2
             Debug.Indent();
 
 			IntPtr windowId;
+			desiredSizeX = x;
+			desiredSizeY = y;
 			isFullscreen = options.HasFlag(GameWindowFlags.Fullscreen);
 			lock (API.sdl_api_lock) {
 				API.Init (API.INIT_VIDEO);
@@ -207,8 +211,32 @@ namespace OpenTK.Platform.SDL2
 					switch (currentEvent.window.eventid)
 					{
 					//TODO: Should we use SizeChanged here and get rid of the other Resize() calls?
+					case API.WindowEventId.SizeChanged:
 					case API.WindowEventId.Resized:
 						Resize(this, EventArgs.Empty);
+						break;
+					case API.WindowEventId.FocusLost:
+						// If we're fullscreen, we want to minimize on focuslost.
+						if (isFullscreen)
+						{
+							lock(API.sdl_api_lock)
+							{
+								API.SetWindowFullscreen(this.Handle, 0);
+								API.MinimizeWindow(this.Handle);
+							}
+						}
+						break;
+					case API.WindowEventId.FocusGained:
+						// Restore to fullscreen.
+						if (isFullscreen)
+						{
+							lock(API.sdl_api_lock)
+							{
+								// You can never be sure with WMs, I'm afraid.
+								API.SetWindowSize(this.Handle, desiredSizeX, desiredSizeY);
+								API.SetWindowFullscreen(this.Handle, API.WindowFlags.Fullscreen);
+							}
+						}
 						break;
 					}
 					break;
@@ -279,24 +307,18 @@ namespace OpenTK.Platform.SDL2
 				return new System.Drawing.Rectangle(0,0,w,h); }
             set
             {	
+				desiredSizeX = value.Width;
+				desiredSizeY = value.Height;
 				if (value != Bounds)
 				{
-					bool wasFullscreen = isFullscreen;
-					// At the moment, we disable fullscreen mode, do the resize and re-enable it.
-					// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
-					// it work, given the SetWindowDisplayMode stuff is quite useless.
-					if (isFullscreen)
-						WindowState = WindowState.Normal;
+					// Note that this does not work in fullscreen mode without a patch to fix
+					// SDL2 bug #1742: http://bugzilla.libsdl.org/show_bug.cgi?id=1742
 
 					lock (API.sdl_api_lock)
 					{
 						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 					}
 
-					if (wasFullscreen)
-						WindowState = WindowState.Fullscreen;
-
-					Resize(this,EventArgs.Empty);
 				}
             }
         }
@@ -328,24 +350,17 @@ namespace OpenTK.Platform.SDL2
 			}
             set
             {
+				desiredSizeX = value.Width;
+				desiredSizeY = value.Height;
 				if (value != Size)
 				{
-					bool wasFullscreen = isFullscreen;
-					// At the moment, we disable fullscreen mode, do the resize and re-enable it.
-					// SetWindowSize has no effect on fullscreen windows, so this is a hack to make
-					// it work, given the SetWindowDisplayMode stuff is quite useless.
-					if (isFullscreen)
-						WindowState = WindowState.Normal;
+					// Note that this does not work in fullscreen mode without a patch to fix
+					// SDL2 bug #1742: http://bugzilla.libsdl.org/show_bug.cgi?id=1742
 
 					lock (API.sdl_api_lock) {
 						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
 					}
 
-					if (wasFullscreen)
-						WindowState = WindowState.Fullscreen;
-
-					// Do we actually need to do this?
-					Resize(this,EventArgs.Empty);
 				}
             }
         }
@@ -479,7 +494,9 @@ namespace OpenTK.Platform.SDL2
 				}
 				lock (API.sdl_api_lock)
 				{
+					API.SetWindowSize (window.WindowHandle, desiredSizeX, desiredSizeY);
 					API.SetWindowFullscreen(window.WindowHandle, isFullscreen?API.WindowFlags.Fullscreen:0);
+					API.SetWindowSize (window.WindowHandle, desiredSizeX, desiredSizeY);
 				}
 				Resize(this, EventArgs.Empty);
             }
@@ -539,8 +556,9 @@ namespace OpenTK.Platform.SDL2
 				lock (API.sdl_api_lock)
 				{
 					API.ShowCursor(value?1:0);
-					// This is apparently OpenTK behaviour.
-					API.SetWindowGrab(window.WindowHandle, !value);
+					// This is apparently OpenTK behaviour. Disabling it for now, as
+					// many devs don't like it.
+					//API.SetWindowGrab(window.WindowHandle, !value);
 				}
             }
         }

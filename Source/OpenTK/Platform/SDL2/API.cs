@@ -278,7 +278,14 @@ namespace OpenTK.Platform.SDL2
 		[DllImport(_dll_name, EntryPoint = "SDL_RaiseWindow")]
 		extern public static void RaiseWindow(IntPtr window);
 
-		//TODO: Maximize/Minimize/Restore Window
+		[DllImport(_dll_name, EntryPoint = "SDL_MaximizeWindow")]
+		extern public static void MaximizeWindow(IntPtr window);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_MinimizeWindow")]
+		extern public static void MinimizeWindow(IntPtr window);
+
+		[DllImport(_dll_name, EntryPoint = "SDL_RestoreWindow")]
+		extern public static void RestoreWindow(IntPtr window);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_SetWindowFullscreen")]
 		extern public static int SetWindowFullscreen(IntPtr window, WindowFlags flags);
