@@ -77,9 +77,13 @@ namespace OpenTK.Platform.SDL2
             Debug.Indent();
 
 			IntPtr windowId;
-			desiredSizeX = x;
-			desiredSizeY = y;
+			desiredSizeX = width;
+			desiredSizeY = height;
 			isFullscreen = options.HasFlag(GameWindowFlags.Fullscreen);
+			if (isFullscreen)
+			{
+				FixupFullscreenRes(width,height,out width, out height);
+			}
 			lock (API.sdl_api_lock) {
 				API.Init (API.INIT_VIDEO);
 				API.VideoInit("",0);
@@ -233,7 +237,9 @@ namespace OpenTK.Platform.SDL2
 							lock(API.sdl_api_lock)
 							{
 								// You can never be sure with WMs, I'm afraid.
-								API.SetWindowSize(this.Handle, desiredSizeX, desiredSizeY);
+								int w, h;
+								FixupFullscreenRes(desiredSizeX,desiredSizeY,out w,out h);
+								API.SetWindowSize(this.Handle, w, h);
 								API.SetWindowFullscreen(this.Handle, API.WindowFlags.Fullscreen);
 							}
 						}
@@ -248,47 +254,26 @@ namespace OpenTK.Platform.SDL2
         #endregion
 
 		#region Private Fullscreen Resolution Impl
-		// So: this function doesn't work, and I'm going to restore the old ways.
-		// What was the problem? SetWindowDisplayMode() sets the display mode for
-		// the _next_ time fullscreen is triggered. Keeping the code in case this is fixed.
-		private int FullscreenChangeRes (int x, int y)
+		// SDL (and most games) get a little bit confused if we try to set a resolution
+		// greater than that of the display. This function checks if this is the case for
+		// a given resolution
+		private bool FixupFullscreenRes (int x, int y, out int newx, out int newy)
 		{
-			API.DisplayMode desired = new API.DisplayMode ();
-			desired.w = x;
-			desired.h = y;
-			// Maybe we should take the existing window's format?
-			desired.format = 0;
-			desired.refresh_rate = 0;
-
-			API.DisplayMode closest;
-
-			int desired_display = 0;
-
-			IntPtr mode_success = IntPtr.Zero;
-
+			API.DisplayMode desktop;
+			int winDisplay;
 			lock (API.sdl_api_lock) {
-				desired_display = API.GetWindowDisplay (window.WindowHandle);
-
-				mode_success = API.GetClosestDisplayMode (desired_display, ref desired, out closest);
-
+				winDisplay = API.GetWindowDisplayIndex (this.Handle);
+				API.GetDesktopDisplayMode (winDisplay, out desktop);
 			}
-
-			if (mode_success == IntPtr.Zero) {
-				Console.WriteLine (String.Format ("Could not find {0}x{1} mode on display {2}", x, y, desired_display));
-				return -1;
+			if (desktop.w < x || desktop.h < y) {
+				newx = desktop.w;
+				newy = desktop.h;
+				return true;
+			} else {
+				newx = x;
+				newy = y;
 			}
-
-			Console.WriteLine("Closest:");
-			Console.WriteLine(String.Format ("w: {0}, h: {1}, rf_rate: {2}, fmt: {3}",closest.w, closest.h, closest.refresh_rate, closest.format));
-
-			int res = -1;
-			lock (API.sdl_api_lock) {
-				res = API.SetWindowDisplayMode (window.WindowHandle, ref closest);
-			}
-			if (res < 0) {
-				Console.WriteLine (String.Format ("Failed to change to resolution {0}x{1} on {2}", x, y, desired_display));
-			}
-			return res;
+			return false;
 
 		}
 
@@ -309,14 +294,19 @@ namespace OpenTK.Platform.SDL2
             {	
 				desiredSizeX = value.Width;
 				desiredSizeY = value.Height;
+				int newWidth = desiredSizeX;
+				int newHeight = desiredSizeY;
+				if (isFullscreen)
+				{
+					FixupFullscreenRes(desiredSizeX, desiredSizeY, out newWidth, out newHeight);
+				}
 				if (value != Bounds)
 				{
 					// Note that this does not work in fullscreen mode without a patch to fix
 					// SDL2 bug #1742: http://bugzilla.libsdl.org/show_bug.cgi?id=1742
 
-					lock (API.sdl_api_lock)
-					{
-						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+					lock (API.sdl_api_lock) {
+						API.SetWindowSize (window.WindowHandle,newWidth, newHeight);
 					}
 
 				}
@@ -352,13 +342,19 @@ namespace OpenTK.Platform.SDL2
             {
 				desiredSizeX = value.Width;
 				desiredSizeY = value.Height;
+				int newWidth = desiredSizeX;
+				int newHeight = desiredSizeY;
+				if (isFullscreen)
+				{
+					FixupFullscreenRes(desiredSizeX, desiredSizeY, out newWidth, out newHeight);
+				}
 				if (value != Size)
 				{
 					// Note that this does not work in fullscreen mode without a patch to fix
 					// SDL2 bug #1742: http://bugzilla.libsdl.org/show_bug.cgi?id=1742
 
 					lock (API.sdl_api_lock) {
-						API.SetWindowSize (window.WindowHandle,value.Width, value.Height);
+						API.SetWindowSize (window.WindowHandle,newWidth, newHeight);
 					}
 
 				}
@@ -484,9 +480,12 @@ namespace OpenTK.Platform.SDL2
             }
             set
             {
+				int newWidth = desiredSizeX;
+				int newHeight = desiredSizeY;
 				if (value == OpenTK.WindowState.Fullscreen)
 				{
 					isFullscreen = true;
+					FixupFullscreenRes(desiredSizeX, desiredSizeY, out newWidth, out newHeight);
 				}
 				else
 				{
@@ -494,9 +493,9 @@ namespace OpenTK.Platform.SDL2
 				}
 				lock (API.sdl_api_lock)
 				{
-					API.SetWindowSize (window.WindowHandle, desiredSizeX, desiredSizeY);
+					API.SetWindowSize (window.WindowHandle, newWidth, newHeight);
 					API.SetWindowFullscreen(window.WindowHandle, isFullscreen?API.WindowFlags.Fullscreen:0);
-					API.SetWindowSize (window.WindowHandle, desiredSizeX, desiredSizeY);
+					API.SetWindowSize (window.WindowHandle, newWidth, newHeight);
 				}
 				Resize(this, EventArgs.Empty);
             }
