@@ -25,9 +25,9 @@ namespace OpenTK.Platform.SDL2
 
     #endregion
 
-    #region internal static class API
+    #region public static class API
 
-    internal static class API
+    public static class API
     {
         #region --- Fields ---
 
@@ -65,14 +65,14 @@ namespace OpenTK.Platform.SDL2
 		#region SDL_rect
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct Point
+		public struct Point
 		{
 			public int x;
 			public int y;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct Rect
+		public struct Rect
 		{
 			public int x, y;
 			public int w, h;
@@ -86,7 +86,7 @@ namespace OpenTK.Platform.SDL2
 		#region SDL_video
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct DisplayMode
+		public struct DisplayMode
 		{
 			public UInt32 format;
 			public int w;
@@ -96,7 +96,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[Flags]
-		internal enum WindowFlags// : uint //Uint32
+		public enum WindowFlags// : uint //Uint32
 		{
 			Fullscreen = 0x00000001,
 			OpenGL = 0x00000002,
@@ -113,7 +113,7 @@ namespace OpenTK.Platform.SDL2
 			Foreign = 0x00000800
 		}
 
-		internal enum WindowEventId : byte
+		public enum WindowEventId : byte
 		{
 			None,
 			Shown,
@@ -132,7 +132,7 @@ namespace OpenTK.Platform.SDL2
 			Close
 		}
 
-		internal enum GLAttr// : int
+		public enum GLAttr// : int
 		{
 			RedSize,
 			GreenSize,
@@ -160,7 +160,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[Flags]
-		internal enum GLProfile// : int
+		public enum GLProfile// : int
 		{
 			Core = 0x0001,
 			Compatibility = 0x0002,
@@ -168,7 +168,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[Flags]
-		internal enum GLContextFlag// : int
+		public enum GLContextFlag// : int
 		{
 			Debug = 0x0001,
 			ForwardCompatible = 0x0002,
@@ -655,7 +655,7 @@ namespace OpenTK.Platform.SDL2
 
 		#region SDL_events
 
-		internal enum EventType
+		public enum EventType
 		{
 			FirstEvent = 0,
 			Quit = 0x100,
@@ -700,7 +700,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct WindowEvent
+		public struct WindowEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -714,7 +714,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct KeyboardEvent
+		public struct KeyboardEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -727,7 +727,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct TextInputEvent
+		public struct TextInputEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -736,7 +736,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct MouseMotionEvent
+		public struct MouseMotionEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -753,7 +753,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct MouseButtonEvent
+		public struct MouseButtonEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -768,7 +768,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct MouseWheelEvent
+		public struct MouseWheelEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -779,7 +779,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct JoyAxisEvent
+		public struct JoyAxisEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -791,7 +791,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct JoyBallEvent
+		public struct JoyBallEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -804,7 +804,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct JoyHatEvent
+		public struct JoyHatEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -815,7 +815,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct JoyButtonEvent
+		public struct JoyButtonEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -826,7 +826,7 @@ namespace OpenTK.Platform.SDL2
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct JoyDeviceEvent
+		public struct JoyDeviceEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -845,14 +845,14 @@ namespace OpenTK.Platform.SDL2
 		*/
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct QuitEvent
+		public struct QuitEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct UserEvent
+		public struct UserEvent
 		{
 			public EventType type;
 			public UInt32 timestamp;
@@ -901,7 +901,7 @@ namespace OpenTK.Platform.SDL2
 		[DllImport(_dll_name, EntryPoint = "SDL_PumpEvents")]
 		public extern static void PumpEvents();
 
-		internal enum EventAction
+		public enum EventAction
 		{
 			AddEvent,
 			PeekEvent,
