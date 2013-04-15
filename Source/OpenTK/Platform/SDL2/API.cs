@@ -1076,7 +1076,12 @@ namespace OpenTK.Platform.SDL2
 		extern public static bool IsGameController(int joystick_index);
 
 		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerNameForIndex")]
-		extern public static string GameControllerNameForIndex(int joystick_index);
+		extern private static IntPtr INTERNAL_GameControllerNameForIndex(int joystick_index);
+
+		public static string GameControllerNameForIndex (int joystick_index)
+		{
+			return Marshal.PtrToStringAnsi (INTERNAL_GameControllerNameForIndex (joystick_index));
+		}
 
 		[DllImport(_dll_name, EntryPoint = "SDL_GameControllerOpen")]
 		extern public static IntPtr GameControllerOpen(int joystick_index);
