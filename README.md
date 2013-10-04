@@ -15,11 +15,11 @@ here, but be warned:
 * Some things (like Game Controller support) were never finished and tested.
 * There are some pretty nasty hacks, as this was my first real incursion into the world of C#.
 * Everything is pretty out-of-date.
-* Thus far everything is pretty Linux specific, as that's the platform I'm developing on. It shouldn't be too hard to get it to work on OS X or Windows, though/
+* Thus far everything is pretty Linux specific, as that's the platform I'm developing on. It shouldn't be too hard to get it to work on OS X or Windows, though.
 
 What does work:
 
-* Multithreaded OpenGL! (No guaruntee that your GL driver doesn't suck though)
+* Multithreaded OpenGL! (No guarantee that your GL driver doesn't suck though)
 * Enough stuff to make it better than the old OpenTK platform backends.
 * A bunch of other fixes in the associated MonoGame branch (a new Song backend, etc)
 * As a proof-of-concept, clearly it went well as everyone's porting their opentk stuff to SDL2 now! :)
